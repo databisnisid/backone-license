@@ -1,0 +1,41 @@
+{% load i18n wagtailadmin_tags %}
+<style>
+table {
+  border-collapse: collapse;
+  width: 90%;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+tr:hover {background-color: coral;}
+</style>
+    <section class="panel summary nice-padding">
+        <h2 class="visuallyhidden">{% trans "Site summary" %}</h2>
+        <table>
+            <tr>
+                <th>
+                    <h1>
+                    Error Code
+                    </h1>
+                </th>
+                <th>
+                    <h1>
+                    Description
+                    </h1>
+                </th>
+            </tr>
+        {% for key, value in error_codes.items %}
+        <tr>
+                <td>
+                    {{ key }}
+                </td>
+                <td>
+                    {{ value }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </section>
