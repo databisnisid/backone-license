@@ -1,0 +1,92 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block content %}
+    <div class="nice-padding w-mt-14">
+
+<div id="msg"></div>
+<form id="snipForm" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+      <input type="file" id="licenseFile" name="files"/>
+      <button id="upload">Upload</button>
+</form>
+<br />
+<table width="100%" style="table-layout: fixed;">
+    <tr><td style="word-wrap: break-word">
+            <div id="output"></div>
+    </td></tr>
+</table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+let licenseContent;
+$(document).ready(function (e) {
+  $('#upload').on('click', function (event) {
+    //Prevent page from reloading
+    event.preventDefault()
+    var form_data = new FormData();
+    // check if there is any file selected
+    const licenseFile = document.getElementById('licenseFile');
+    //var ins = document.getElementById('licenseFile').files.length;
+    var ins = licenseFile.files.length;
+    if(ins == 0) {
+      $('#msg').html('<span style="color:red">Select at least one file</span>');
+      return;
+    }
+    if(ins > 1) {
+      $('#msg').html('<span style="color:red">Only allow 1 file per upload</span>');
+      return;
+    }
+
+    var file = licenseFile.files[0];
+    var fr = new FileReader();
+   	fr.onload = function () {
+	// Do stuff on onload, use fr.result for contents of file
+		//$( '#output' ).append( $( '<div/>' ).html( fr.result ) );
+		$( '#output' ).text(fr.result);
+        licenseContent = fr.result;
+        //console.log(licenseContent);
+	};
+	//fr.readAsText( file );
+	//fr.readAsDataURL( file );
+	fr.readAsText( file );
+    console.log(licenseContent);
+
+    // add all files
+    //for (var x = 0; x < ins; x++) {
+    //  form_data.append("files[]", document.getElementById('licenseFiles').files[x]);
+    //}
+    //const output = document.getElementById("output");
+    //for (const [key, value] of form_data) {
+    //    output.textContent += `${key}: ${value}\n`;
+    //}
+    // obtain CSFR token
+    csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+    // set the headers
+    headers = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest', 'X-CSRFToken': csrf_token};
+
+    $.ajax({
+      type: 'POST',
+      url: '/licenses/handler/', // point to server-side URL
+      dataType: "json",
+      ContentType: false,
+      cache: false,
+      processData: false,
+      headers: headers,
+      data: form_data,
+      success: function (response) { // display success response
+        console.log("successssssssssssss")
+      },
+      error: function (response) {
+        console.log("NOPEEEEEE")
+      }
+    });
+  });
+});
+
+</script>
+
+{% endblock %}
