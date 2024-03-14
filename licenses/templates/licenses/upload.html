@@ -2,26 +2,48 @@
 {% load i18n wagtailadmin_tags %}
 
 {% block content %}
-    <div class="nice-padding w-mt-14">
+<div class="nice-padding w-mt-14">
+
+<h1>License Decoder</h1>
 
 <div id="msg"></div>
 <form id="snipForm" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
-      <input type="file" id="licenseFile" name="files"/>
-      <button id="upload">Upload</button>
+    <table width="100%">
+        <tr>
+            <td>
+                <input type="file" id="licenseFile" name="files"/>
+            </td>
+            <td>
+                <button id="upload" class="button button-longrunning">Upload</button>
+            </td>
+        </tr>
+    </table>
 </form>
 <br />
-<table width="100%" style="table-layout: fixed;">
-    <tr><td style="word-wrap: break-word">
+<table width="90%" style="table-layout: fixed;">
+    <tr>
+        <td style="word-wrap: break-word">
             <div id="output"></div>
-    </td></tr>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <hr />
+        </td>
+    </tr>
+
+    <tr>
+        <td style="word-wrap: break-word">
+            <div id="output_json"></div>
+        </td>
+    </tr>
 </table>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-let licenseContent;
 $(document).ready(function (e) {
   $('#upload').on('click', function (event) {
     //Prevent page from reloading
@@ -40,50 +62,40 @@ $(document).ready(function (e) {
       return;
     }
 
+    let licenseContent;
+    let licenseJSON;
     var file = licenseFile.files[0];
     var fr = new FileReader();
    	fr.onload = function () {
-	// Do stuff on onload, use fr.result for contents of file
-		//$( '#output' ).append( $( '<div/>' ).html( fr.result ) );
-		$( '#output' ).text(fr.result);
+	    // Do stuff on onload, use fr.result for contents of file
         licenseContent = fr.result;
-        //console.log(licenseContent);
+
+        // obtain CSFR token
+        csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        // set the headers
+        headers = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest', 'X-CSRFToken': csrf_token};
+
+        $.ajax({
+            type: 'POST',
+            url: '/licenses/handler/', // point to server-side URL
+            dataType: "json",
+            ContentType: false,
+            cache: false,
+            processData: false,
+            headers: headers,
+            data: licenseContent,
+            success: function (response) { // display success response
+		        $( '#output' ).text(JSON.stringify(response));
+                console.log(response)
+            },
+            error: function (response) {
+		        $( '#output' ).text(JSON.stringify(response));
+                console.log(response)
+            }
+        });
 	};
-	//fr.readAsText( file );
-	//fr.readAsDataURL( file );
 	fr.readAsText( file );
-    console.log(licenseContent);
-
-    // add all files
-    //for (var x = 0; x < ins; x++) {
-    //  form_data.append("files[]", document.getElementById('licenseFiles').files[x]);
-    //}
-    //const output = document.getElementById("output");
-    //for (const [key, value] of form_data) {
-    //    output.textContent += `${key}: ${value}\n`;
-    //}
-    // obtain CSFR token
-    csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
-
-    // set the headers
-    headers = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest', 'X-CSRFToken': csrf_token};
-
-    $.ajax({
-      type: 'POST',
-      url: '/licenses/handler/', // point to server-side URL
-      dataType: "json",
-      ContentType: false,
-      cache: false,
-      processData: false,
-      headers: headers,
-      data: form_data,
-      success: function (response) { // display success response
-        console.log("successssssssssssss")
-      },
-      error: function (response) {
-        console.log("NOPEEEEEE")
-      }
-    });
   });
 });
 

@@ -2,7 +2,6 @@ import ast
 import json
 from crum import get_current_user
 #from django.contrib.auth.models import User
-from accounts.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
