@@ -13,6 +13,7 @@ class Licenses(models.Model):
     controller_token = models.CharField(_('Token'), max_length=50)
     valid_until = models.DateTimeField(_('Valid Until'))
     description = models.TextField(_('Description'), blank=True, null=True)
+    is_block_rule = models.BooleanField(_('Block Rule at Expired'), default=True)
 
     license_string = models.TextField(_('License Code'),
                                     help_text=_('Copy this to site, and input in License Code'),

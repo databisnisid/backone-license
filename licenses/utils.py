@@ -24,11 +24,13 @@ def check_license(lic_json):
             'uuid': uuid,
             'token': token,
             'name': name,
+            'is_block_rule': 1,
             'valid_until': ''
             }
     if lic:
         lic_result['status'] = 1
         lic_result['valid_until'] = str(lic.valid_until)
+        lic_result['is_block_rule'] = 1 if lic.is_block_rule else 0
 
     return lic_result
 
