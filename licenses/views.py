@@ -58,11 +58,13 @@ def license_handler(request):
 def license_download(request, license_id):
     try:
         lic = Licenses.objects.get(id=license_id)
+        is_block_rule = 1 if lic.is_block_rule else 0
         lic_json = {
                 'name': str(lic.description),
                 'node_id': str(lic.node_id),
                 'uuid': str(lic.organization_uuid),
                 'token': str(lic.controller_token),
+                'is_block_rule': is_block_rule,
                 'license_code': str(lic.license_string)
                 }
     except ObjectDoesNotExist:
