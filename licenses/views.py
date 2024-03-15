@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from wagtail.admin.views.generic.preview import JsonResponse
 from django.views.decorators.csrf import requires_csrf_token
+from django.utils import timezone
 from config.utils import to_json
 from .models import Licenses
 from .utils import check_license
@@ -59,7 +60,20 @@ def license_download(request, license_id):
     try:
         lic = Licenses.objects.get(id=license_id)
         is_block_rule = 1 if lic.is_block_rule else 0
-        lic_json = {
+
+        if request.user.is_superuser:
+            lic_json = {
+                'name': str(lic.description),
+                'node_id': str(lic.node_id),
+                'uuid': str(lic.organization_uuid),
+                'token': str(lic.controller_token),
+                'valid_until': str(lic.valid_until),
+                'is_block_rule': is_block_rule,
+                'license_code': str(lic.license_string),
+                'license_key': str(lic.license_key)
+                }
+        else:
+            lic_json = {
                 'name': str(lic.description),
                 'node_id': str(lic.node_id),
                 'uuid': str(lic.organization_uuid),
@@ -71,10 +85,19 @@ def license_download(request, license_id):
     except ObjectDoesNotExist:
         lic_json = {}
 
+    now = timezone.now()
+    date_format = '%Y%m%d'
+    current_date = now.strftime(date_format)
+
     try:
-        filename = lic_json['token'] + '.lic'
+        filename = lic_json['uuid'] + '.lic'
     except:
         filename = 'license.lic'
+
+    if request.user.is_superuser:
+        filename = 'init_' + current_date + '_' + filename
+    else:
+        filename = 'update_' + current_date + '_' + filename
 
     lic_json_str = json.dumps(lic_json)
     lic_json_enc = b64encode(lic_json_str.encode()).decode()
