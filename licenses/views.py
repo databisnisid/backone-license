@@ -70,7 +70,7 @@ def license_download(request, license_id):
                 'valid_until': str(lic.valid_until),
                 'is_block_rule': is_block_rule,
                 'license_code': str(lic.license_string),
-                'license_key': str(lic.license_key)
+                'license_key': str(lic.license_site)
                 }
         else:
             lic_json = {
