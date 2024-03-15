@@ -64,6 +64,7 @@ def license_download(request, license_id):
                 'node_id': str(lic.node_id),
                 'uuid': str(lic.organization_uuid),
                 'token': str(lic.controller_token),
+                'valid_until': str(lic.valid_until),
                 'is_block_rule': is_block_rule,
                 'license_code': str(lic.license_string)
                 }
