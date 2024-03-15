@@ -8,7 +8,8 @@ urlpatterns = [
     #path('django-admin/', admin.site.urls),
     path('', HttpResponseNotFound, name='not-found'),
     path('login/', include(wagtailadmin_urls)),
-    path('licenses/', include('licenses.urls')),
+    #path('licenses/', include('licenses.urls')),
+    path('api/licenses/', include('licenses.urls')),
 ]
 
 if settings.DEBUG:

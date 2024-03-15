@@ -9,7 +9,7 @@ from wagtail import hooks
 #from members.models import Members
 #from crum import get_current_user
 #from wagtail.contrib.modeladmin.views import CreateView, EditView
-from .summary_panels import ErrorMessagesPanel
+from .summary_panels import ErrorMessagesPanel, LicenseDecoderPanel
 #from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import Group
@@ -83,6 +83,7 @@ def add_another_welcome_panel(request, panels):
     panels[:] = [panel for panel in panels if panel.name != "locked_pages"]
 
     panels.append(ErrorMessagesPanel())
+    panels.append(LicenseDecoderPanel())
     #panels.append(MapSummaryPanel())
     #panels.append(NetworksPanelSummary())
 

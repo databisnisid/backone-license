@@ -1,9 +1,39 @@
+from django.urls import reverse
+from wagtail.contrib.modeladmin.helpers.button import ButtonHelper
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin, ModelAdminGroup, ObjectList, PermissionHelper, modeladmin_register)
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, FieldRowPanel
 from django.utils.translation import gettext_lazy as _
 from .models import Licenses
 from crum import get_current_user
+
+
+class LicensesButtonHelper(ButtonHelper):
+
+    current_classnames = ['button button-small button-primary']
+
+
+    def json_button(self, obj):
+        text = _('Download License')
+        #obj_id = obj.id
+        button_url = reverse('license_download', args=[obj.id])
+
+        return {
+                'url': button_url,
+                'label': text,
+                'classname': self.finalise_classname(self.current_classnames),
+                'title': text,
+                }
+
+    def get_buttons_for_obj(self, obj, exclude=None, classnames_add=None, classnames_exclude=None):
+        buttons = super().get_buttons_for_obj(
+            obj, exclude, classnames_add, classnames_exclude
+        )
+        if 'json_button' not in (exclude or []):
+            buttons.append(self.json_button(obj))
+
+
+        return buttons
 
 
 class LicensesPermissionHelper(PermissionHelper):
@@ -33,7 +63,7 @@ class LicensesPermissionHelper(PermissionHelper):
 
 class LicensesAdmin(ModelAdmin):
     model = Licenses
-    #button_helper_class = ControllerButtonHelper   # Uncomment this to enable button
+    button_helper_class = LicensesButtonHelper   # Uncomment this to enable button
     #inspect_view_enabled = True
     menu_label = 'License'  # ditch this to use verbose_name_plural from model
     menu_icon = 'key'  # change as required
