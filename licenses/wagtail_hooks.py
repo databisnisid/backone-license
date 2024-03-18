@@ -70,7 +70,7 @@ class LicensesAdmin(ModelAdmin):
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('node_id', 'organization_uuid', 'valid_until', 'description')
-    list_filter = ('node_id', 'organization_uuid', )
+    list_filter = ('node_id',)
     search_fields = ('node_id', 'organization_uuid', 'description',)
     permission_helper_class = LicensesPermissionHelper
 
