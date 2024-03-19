@@ -88,7 +88,7 @@ class LicensesAdmin(ModelAdmin):
             FieldPanel('license_site', read_only=True),
             FieldPanel('license_string', read_only=True),
             FieldPanel('license_server', read_only=True),
-            ], heading=_('License Keys'))
+            ], heading=_('License Keys'), classname="collapsible collapsed")
     ]
 
     def get_edit_handler(self):
@@ -106,7 +106,7 @@ class LicensesAdmin(ModelAdmin):
                 FieldPanel('license_site', read_only=True),
                 FieldPanel('license_string', read_only=True),
                 FieldPanel('license_server', read_only=True),
-                ], heading=_('License Keys'))
+                ], heading=_('License Keys'), classname="collapsible collapsed")
         ]
 
         admin_panels = [
@@ -121,7 +121,7 @@ class LicensesAdmin(ModelAdmin):
                 ], heading=_('Site Details')),
             MultiFieldPanel([
                 FieldPanel('license_string', read_only=True),
-                ], heading=_('License Keys'))
+                ], heading=_('License Keys'), classname="collapsible collapsed")
         ]
 
         current_user = get_current_user()
