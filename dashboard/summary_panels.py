@@ -23,7 +23,7 @@ class LicenseSummaryPanel(Component):
 
         for license in licenses:
 
-            license_time = license.get_license_time()
+            license_time = license.valid_until
 
             if license_time:
 
@@ -61,7 +61,7 @@ class LicenseSummaryPanel(Component):
                    }
                 license_status_list.append(license_status)
 
-        print(license_status_list)
+        #print(license_status_list)
         context['license_status'] = license_status_list
         return context
 
