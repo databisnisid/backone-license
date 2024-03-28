@@ -5,6 +5,65 @@ from crum import get_current_user
 from django.utils.translation import gettext as _
 from django.db.models import Count
 from django.contrib.auth.models import Group
+from licenses.models import Licenses
+
+
+
+class LicenseSummaryPanel(Component):
+    order = 5
+    template_name = 'dashboard/license_summary.html'
+
+    def get_context_data(self, parent_context):
+        context = super().get_context_data(parent_context)
+
+        
+        licenses = Licenses.objects.all()
+
+        license_status_list = []
+
+        for license in licenses:
+
+            license_time = license.get_license_time()
+
+            if license_time:
+
+                delta_time = license_time - timezone.now()
+
+                print('License day', delta_time.days)
+
+                if delta_time.days < 0:
+                    license_status = {
+                        'node_id': license.node_id,
+                        'uuid': str(license.organization_uuid),
+                        'name': license.description,
+                        'msg': _('License Expired'),
+                        'status': 2
+                        }
+                    license_status_list.append(license_status)
+
+                elif delta_time.days < 30:
+                    license_status = {
+                        'node_id': license.node_id,
+                        'uuid': str(license.organization_uuid),
+                        'name': license.description,
+                        'msg': _('License will expired in ' + str(delta_time.days) + ' days'),
+                        'status': 1
+                        }
+                    license_status_list.append(license_status)
+
+            else:
+                license_status = {
+                   'node_id': license.node_id,
+                   'uuid': str(license.organization_uuid),
+                   'name': license.description,
+                   'msg': _('License is Empty'),
+                   'status': 0
+                   }
+                license_status_list.append(license_status)
+
+        print(license_status_list)
+        context['license_status'] = license_status_list
+        return context
 
 
 class ErrorCodes:

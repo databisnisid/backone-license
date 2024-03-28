@@ -1,22 +1,11 @@
-#from django.http import HttpRequest
-#from django.utils.safestring import mark_safe
-#from wagtail.admin.ui.components import Component
 from django.core.exceptions import ObjectDoesNotExist
 from wagtail import hooks
-
-#from dashboard.summary_panels import NetworksPanelSummary
-#from networks.models import Networks, NetworkRoutes
-#from members.models import Members
-#from crum import get_current_user
-#from wagtail.contrib.modeladmin.views import CreateView, EditView
-from .summary_panels import ErrorMessagesPanel, LicenseDecoderPanel
-#from django.utils.html import format_html
+from .summary_panels import ErrorMessagesPanel, LicenseDecoderPanel, LicenseSummaryPanel
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import Group
 from axes.models import AccessAttempt, AccessLog, AccessFailureLog
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
-#from django.conf import settings
 
 
 @hooks.register('construct_reports_menu', order=1)
@@ -82,6 +71,7 @@ def add_another_welcome_panel(request, panels):
     panels[:] = [panel for panel in panels if panel.name != "user_pages_in_workflow_moderation"]
     panels[:] = [panel for panel in panels if panel.name != "locked_pages"]
 
+    panels.append(LicenseSummaryPanel())
     panels.append(ErrorMessagesPanel())
     panels.append(LicenseDecoderPanel())
     #panels.append(MapSummaryPanel())
