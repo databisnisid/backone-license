@@ -71,8 +71,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'wagtail_2fa.middleware.VerifyUserMiddleware',
-    #'wagtail_2fa.middleware.VerifyUserPermissionsMiddleware',
+    #'wagtail_2fa.middleware.VerifyUserMiddleware',
+    'wagtail_2fa.middleware.VerifyUserPermissionsMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
