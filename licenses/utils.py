@@ -89,7 +89,7 @@ def delete_expired_licenses(is_delete: bool = False) -> None:
 
         if license_status["status"] == 2:
             print(
-                "Delete License %s with UUID %s",
+                "Delete Expired License %s with UUID %s",
                 license_status["name"],
                 license_status["uuid"],
             )
