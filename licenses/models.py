@@ -77,3 +77,17 @@ class Licenses(models.Model):
         self.license_string = b64encode(license_code_enc).decode()
 
         return super(Licenses, self).save()
+
+    def license_status(self):
+        text = ""
+        delta_time = self.valid_until - timezone.now()
+        if delta_time.days < 0:
+            text = _("License Expired")
+        elif delta_time.days < 30:
+            text = _("License will be expired in " + str(delta_time.days) + " days")
+        else:
+            text = "Valid"
+
+        return text
+
+    license_status.short_description = _("License Status")

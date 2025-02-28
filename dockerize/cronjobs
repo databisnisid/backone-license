@@ -1,1 +1,2 @@
 #0 * * * * python /app/manage.py shell --command "from config.workers import sync_data; sync_data('https://manage.backone.cloud')" 
+0 3 * * * python /app/manage.py shell --command "from licenses.utils import delete_expired_licenses; delete_expired_licenses(True)"
