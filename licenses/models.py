@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.utils.html import format_html
 import rsa
 from base64 import b64encode, b64decode
 from django.db import models
@@ -80,14 +81,18 @@ class Licenses(models.Model):
 
     def license_status(self):
         text = ""
+        color = "green"
         delta_time = self.valid_until - timezone.now()
         if delta_time.days < 0:
             text = _("License Expired")
+            color = "red"
         elif delta_time.days < 30:
             text = _("License will be expired in " + str(delta_time.days) + " days")
+            color = "blue"
         else:
             text = "Valid"
 
-        return text
+        # return text
+        return format_html("<span style='color: " + color + ";'>" + text + "</span>")
 
     license_status.short_description = _("License Status")

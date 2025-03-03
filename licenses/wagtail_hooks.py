@@ -76,7 +76,13 @@ class LicensesAdmin(ModelAdmin):
     exclude_from_explorer = (
         False  # or True to exclude pages of this type from Wagtail's explorer view
     )
-    list_display = ("node_id", "organization_uuid", "valid_until", "description")
+    list_display = (
+        "node_id",
+        "organization_uuid",
+        "valid_until",
+        "description",
+        "license_status",
+    )
     list_filter = ("node_id",)
     search_fields = (
         "node_id",
