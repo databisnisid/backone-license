@@ -53,7 +53,8 @@ def check_license_expiry(license: Licenses) -> dict:
 
         delta_time = license_time - timezone.now()
 
-        print("License day", delta_time.days)
+        # print("License day", delta_time.days)
+        license_status["to_expiry_day"] = delta_time.days
 
         if delta_time.days < 0:
             license_status = {
@@ -62,6 +63,7 @@ def check_license_expiry(license: Licenses) -> dict:
                 "name": license.description,
                 "msg": _("License Expired"),
                 "status": 2,
+                "to_expiry_day": delta_time.days,
             }
 
         elif delta_time.days < 30:
@@ -73,6 +75,7 @@ def check_license_expiry(license: Licenses) -> dict:
                     "License will be expired in " + str(delta_time.days) + " days"
                 ),
                 "status": 1,
+                "to_expiry_day": delta_time.days,
             }
 
     else:
@@ -82,12 +85,13 @@ def check_license_expiry(license: Licenses) -> dict:
             "name": license.description,
             "msg": _("License is Empty"),
             "status": 0,
+            "to_expiry_day": 999999999,
         }
 
     return license_status
 
 
-def delete_expired_licenses(is_delete: bool = False) -> None:
+def delete_expired_licenses(is_delete: bool = False, to_expiry_day: int = -30) -> None:
     licenses = Licenses.objects.all()
 
     for license in licenses:
@@ -95,9 +99,10 @@ def delete_expired_licenses(is_delete: bool = False) -> None:
 
         if license_status["status"] == 2:
             print(
-                "Delete Expired License %s with UUID %s",
-                license_status["name"],
-                license_status["uuid"],
+                "Recommend to delete Expired License {} with expiry day {}".format(
+                    license_status["name"], license_status["to_expiry_day"]
+                )
             )
-            if is_delete:
+            if is_delete and license.to_expiry_day < to_expiry_day:
                 license.delete()
+                print("Delete from DB!")
