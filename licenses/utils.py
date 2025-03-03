@@ -41,7 +41,13 @@ def check_license(lic_json):
 def check_license_expiry(license: Licenses) -> dict:
     license_time = license.valid_until
 
-    license_status = {}
+    license_status = {
+        "node_id": license.node_id,
+        "uuid": str(license.organization_uuid),
+        "name": license.description,
+        "msg": _("VALID"),
+        "status": 9,
+    }
 
     if license_time:
 
