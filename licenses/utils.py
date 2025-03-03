@@ -103,6 +103,6 @@ def delete_expired_licenses(is_delete: bool = False, to_expiry_day: int = -30) -
                     license_status["name"], license_status["to_expiry_day"]
                 )
             )
-            if is_delete and license["to_expiry_day"] < to_expiry_day:
+            if is_delete and license_status["to_expiry_day"] < to_expiry_day:
                 license.delete()
                 print("Delete from DB!")
