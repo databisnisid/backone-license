@@ -30,11 +30,11 @@
                     {{ license.name }}
                 </td>
                 <td style="text-align: center;">
-                  {% if license_statu.status == 2 %}
+                  {% if license.status == 2 %}
                     <span style="color: red;">{{ license.msg }}</span>
-                  {% elif license_status.status == 1 %}
+                  {% elif license.status == 1 %}
                     <span style="color: blue;">{{ license.msg }}</span>
-                  {% elif license_status.status == 9 %}
+                  {% elif license.status == 9 %}
                     <span style="color: green;">{{ license.msg }}</span>
                   {% else %}
                     <span style="color: black;">{{ license.msg }}</span>
